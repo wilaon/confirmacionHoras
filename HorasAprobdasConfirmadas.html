@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Horas Extras</title>
+  <style>
+    :root {
+      --accent: #ff6b00;
+      --primary: #161C2E;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --bg: linear-gradient(180deg, #1e3c72, #2a5298);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: #0f172a;
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 20px 25px;
+      background: linear-gradient(90deg, var(--accent), #ffb366);
+      color: #fff;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 5px;
+    }
+
+    main {
+      padding: 20px 25px;
+    }
+
+    .search-section {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .employee-info {
+      background: #f0f9ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .employee-info h3 {
+      margin: 0 0 5px 0;
+      color: #1e40af;
+      font-size: 18px;
+    }
+
+    .employee-info .details {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .notice {
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .notice.info {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .notice.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .notice.warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .notice.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .controls .info {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .controls .info strong {
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    .table-wrapper {
+      max-height: 400px;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: var(--primary);
+      color: white;
+      z-index: 10;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .chk-col {
+      width: 40px;
+      text-align: center;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .totals {
+      background: #f0fdf4;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      border: 1px solid #bbf7d0;
+    }
+
+    .totals .label {
+      color: #166534;
+    }
+
+    .totals .value {
+      font-size: 20px;
+      color: var(--success);
+    }
+
+    .history {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .history h4 {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .history-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+    }
+
+    .spinner {
+      border: 3px solid #e5e7eb;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .search-section {
+        flex-direction: column;
+      }
+
+      input[type="text"] {
+        width: 100%;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      th, td {
+        padding: 8px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>📋 Confirmación de Horas Extras</h1>
+        <div class="subtitle">Revise y confirme sus registros de horas extras aprobados</div>
+      </header>
+
+      <main>
+        <!-- Búsqueda -->
+        <div class="search-section">
+          <input type="text" id="dniInput" placeholder="Ingrese su DNI (ej: 0801-3333-66666)" maxlength="15">
+          <button class="btn btn-primary" id="btnBuscar" onclick="buscarRegistros()">
+            🔍 Buscar
+          </button>
+          <button class="btn btn-secondary" onclick="limpiarTodo()">
+            🗑️ Limpiar
+          </button>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="notice hidden"></div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading hidden">
+          <div class="spinner"></div>
+          <div>Buscando registros...</div>
+        </div>
+
+        <!-- Info del empleado -->
+        <div id="empleadoInfo" class="employee-info hidden">
+          <h3 id="empleadoNombre"></h3>
+          <div class="details">
+            DNI: <strong id="empleadoDNI"></strong>
+          </div>
+        </div>
+
+        <!-- Área de resultados -->
+        <div id="resultados" class="hidden">
+          <div class="controls">
+            <div class="info">
+              Registros pendientes: <strong id="totalRegistros">0</strong>
+            </div>
+            <div>
+              <button class="btn btn-secondary" onclick="seleccionarTodos()">
+                ☑️ Seleccionar todos
+              </button>
+              <button class="btn btn-success" id="btnConfirmar" onclick="confirmarSeleccionados()">
+                ✅ Confirmar seleccionados
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table id="tablaRegistros">
+              <thead>
+                <tr>
+                  <th class="chk-col"></th>
+                  <th>Fecha</th>
+                  <th>Turno</th>
+                  <th>Total Horas</th>
+                  <th>25% Noct</th>
+                  <th>25% Diur</th>
+                  <th>50% Noct</th>
+                  <th>75% Prol</th>
+                  <th>100% Fer</th>
+                  <th>Ingeniero</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaBody">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="totals">
+            <div class="label">Total horas pendientes de confirmar:</div>
+            <div class="value" id="totalHoras">0</div>
+          </div>
+
+          <div class="notice warning" style="margin-top: 15px;">
+            ⚠️ Al confirmar, usted acepta que las horas extras mostradas son correctas. 
+            Esta acción quedará registrada con fecha y hora.
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div id="historial" class="history hidden">
+          <h4>📜 Últimas confirmaciones</h4>
+          <div id="historialLista"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Configuración
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyE7rIvtNpnUKYJScuHlMwmeRZyR1xJC9bujgkG7khLoz1gtE1m5zb-fn3OO7l6ePycxA/exec';
+    
+    let registrosActuales = [];
+    let dniActual = '';
+
+    // Formatear DNI mientras escribe
+    document.getElementById('dniInput').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/[^0-9]/g, '');
+      
+      if (value.length > 4 && value.length <= 8) {
+        value = value.substring(0, 4) + '-' + value.substring(4);
+      } else if (value.length > 8) {
+        value = value.substring(0, 4) + '-' + value.substring(4, 8) + '-' + value.substring(8, 13);
+      }
+      
+      e.target.value = value;
+    });
+
+    // Buscar con Enter
+    document.getElementById('dniInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') buscarRegistros();
+    });
+
+    // Mostrar mensaje
+    function mostrarMensaje(texto, tipo = 'info') {
+      const msg = document.getElementById('mensaje');
+      msg.textContent = texto;
+      msg.className = 'notice ' + tipo;
+      msg.classList.remove('hidden');
+      
+      setTimeout(() => msg.classList.add('hidden'), 6000);
+    }
+
+    // Mostrar/ocultar loading
+    function mostrarLoading(mostrar) {
+      document.getElementById('loading').classList.toggle('hidden', !mostrar);
+      document.getElementById('btnBuscar').disabled = mostrar;
+    }
+
+    // Buscar registros
+    async function buscarRegistros() {
+      const dni = document.getElementById('dniInput').value.trim();
+      
+      if (!dni || dni.length < 15) {
+        mostrarMensaje('Ingrese un DNI válido completo', 'warning');
+        return;
+      }
+
+      dniActual = dni;
+      mostrarLoading(true);
+      
+      // Ocultar secciones
+      document.getElementById('empleadoInfo').classList.add('hidden');
+      document.getElementById('resultados').classList.add('hidden');
+      document.getElementById('historial').classList.add('hidden');
+
+      try {
+        const url = `${GOOGLE_SCRIPT_URL}?action=obtenerRegistrosPendientes&dni=${encodeURIComponent(dni)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        mostrarLoading(false);
+
+        if (data.error) {
+          mostrarMensaje(data.error, 'error');
+          return;
+        }
+
+        // Mostrar info del empleado
+        if (data.empleado) {
+          document.getElementById('empleadoNombre').textContent = data.empleado.nombre;
+          document.getElementById('empleadoDNI').textContent = dni;
+          document.getElementById('empleadoInfo').classList.remove('hidden');
+        }
+
+        // Mostrar registros
+        if (!data.registros || data.registros.length === 0) {
+          mostrarMensaje('No tiene registros pendientes de confirmación', 'info');
+        } else {
+          registrosActuales = data.registros;
+          renderizarTabla(registrosActuales);
+          document.getElementById('resultados').classList.remove('hidden');
+          mostrarMensaje(`Se encontraron ${registrosActuales.length} registro(s) pendientes`, 'success');
+        }
+
+        // Mostrar historial
+        if (data.historial && data.historial.length > 0) {
+          renderizarHistorial(data.historial);
+          document.getElementById('historial').classList.remove('hidden');
+        }
+
+      } catch (error) {
+        mostrarLoading(false);
+        console.error('Error:', error);
+        mostrarMensaje('Error al buscar registros: ' + error.message, 'error');
+      }
+    }
+
+    // Renderizar tabla
+    function renderizarTabla(registros) {
+      const tbody = document.getElementById('tablaBody');
+      tbody.innerHTML = '';
+      
+      let totalHoras = 0;
+
+      registros.forEach((reg, index) => {
+        const horasReg = parseFloat(reg.totalHoras) || 0;
+        totalHoras += horasReg;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="chk-col">
+            <input type="checkbox" class="chkRegistro" data-index="${index}" data-fila="${reg.fila}" onchange="actualizarContador()">
+          </td>
+          <td>${formatearFecha(reg.fecha)}</td>
+          <td>${reg.turno || '-'}</td>
+          <td style="text-align:center; font-weight:600">${horasReg}</td>
+          <td style="text-align:center">${reg.noct25 || 0}</td>
+          <td style="text-align:center">${reg.diur25 || 0}</td>
+          <td style="text-align:center">${reg.noct50 || 0}</td>
+          <td style="text-align:center">${reg.prolong75 || 0}</td>
+          <td style="text-align:center">${reg.feriado100 || 0}</td>
+          <td>${reg.ingeniero || '-'}</td>
+          <td style="font-size:12px">${reg.observaciones || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('totalRegistros').textContent = registros.length;
+      document.getElementById('totalHoras').textContent = totalHoras.toFixed(2);
+      actualizarContador();
+    }
+
+    // Formatear fecha
+    function formatearFecha(fecha) {
+      if (!fecha) return '-';
+      const d = new Date(fecha);
+      return d.toLocaleDateString('es-ES');
+    }
+
+    // Renderizar historial
+    function renderizarHistorial(historial) {
+      const lista = document.getElementById('historialLista');
+      lista.innerHTML = '';
+
+      historial.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        const fecha = new Date(item.fecha);
+        div.textContent = `📅 ${fecha.toLocaleDateString('es-ES')} - ${fecha.toLocaleTimeString('es-ES')} - ${item.cantidad} registro(s)`;
+        lista.appendChild(div);
+      });
+    }
+
+    // Seleccionar todos
+    function seleccionarTodos() {
+      const checks = document.querySelectorAll('.chkRegistro');
+      const todosSeleccionados = Array.from(checks).every(c => c.checked);
+      checks.forEach(c => c.checked = !todosSeleccionados);
+      actualizarContador();
+    }
+
+    // Actualizar contador de seleccionados
+    function actualizarContador() {
+      const seleccionados = document.querySelectorAll('.chkRegistro:checked').length;
+      const btnConfirmar = document.getElementById('btnConfirmar');
+      btnConfirmar.disabled = seleccionados === 0;
+      btnConfirmar.textContent = seleccionados > 0 
+        ? `✅ Confirmar ${seleccionados} registro(s)` 
+        : '✅ Confirmar seleccionados';
+    }
+
+    // Confirmar seleccionados
+    async function confirmarSeleccionados() {
+      const checksSeleccionados = document.querySelectorAll('.chkRegistro:checked');
+      
+      if (checksSeleccionados.length === 0) {
+        mostrarMensaje('Seleccione al menos un registro', 'warning');
+        return;
+      }
+
+      const filas = [];
+      checksSeleccionados.forEach(chk => {
+        filas.push(parseInt(chk.dataset.fila));
+      });
+
+      const confirmar = confirm(
+        `¿Está seguro de confirmar ${filas.length} registro(s)?\n\n` +
+        `Esta acción no se puede deshacer.`
+      );
+
+      if (!confirmar) return;
+
+      document.getElementById('btnConfirmar').disabled = true;
+      document.getElementById('btnConfirmar').textContent = '⏳ Confirmando...';
+
+        try {
+      
+        const url = `${GOOGLE_SCRIPT_URL}?action=confirmarRegistros&dni=${encodeURIComponent(dniActual)}&filas=${encodeURIComponent(JSON.stringify(filas))}`;
+        
+        await fetch(url, {
+        method: 'GET',
+        mode: 'no-cors'  // ← IMPORTANTE
+        });
+
+        // Con mode: 'no-cors' no podemos leer la respuesta
+        // Esperamos un momento y asumimos éxito
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        mostrarMensaje(`✅ Confirmación enviada para ${filas.length} registro(s). Recargando...`, 'success');
+        
+        // Recargar datos para verificar
+        setTimeout(() => buscarRegistros(), 1500);
+
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarMensaje('Error al confirmar: ' + error.message, 'error');
+        } finally {
+            document.getElementById('btnConfirmar').disabled = false;
+            actualizarContador();
+        }
+    }
+
+    // Limpiar todo
+    function limpiarTodo() {
+      document.getElementById('dniInput').value = '';
+      document.getElementById('empleadoInfo').classList.add('hidden');
+      document.getElementById('resultados').classList.add('hidden');
+      document.getElementById('historial').classList.add('hidden');
+      document.getElementById('mensaje').classList.add('hidden');
+      registrosActuales = [];
+      dniActual = '';
+    }
+  </script>
+</body>
+</html>
