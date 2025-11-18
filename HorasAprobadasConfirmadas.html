@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Horas Extras</title>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>📋 Confirmación de Horas Extras</h1>
+        <div class="subtitle">Revise y confirme sus registros de horas extras aprobados</div>
+        <link rel="stylesheet" href="portal-confirmacion.css">
+      </header>
+
+      <main>
+        <!-- Búsqueda -->
+        <div class="search-section">
+          <input type="text" id="dniInput" placeholder="Ingrese su DNI (ej: 0801-3333-66666)" maxlength="15">
+          <button class="btn btn-primary" id="btnBuscar" onclick="buscarRegistros()">
+            🔍 Buscar
+          </button>
+          <button class="btn btn-secondary" onclick="limpiarTodo()">
+            🗑️ Limpiar
+          </button>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="notice hidden"></div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading hidden">
+          <div class="spinner"></div>
+          <div>Buscando registros...</div>
+        </div>
+
+        <!-- Info del empleado -->
+        <div id="empleadoInfo" class="employee-info hidden">
+          <h3 id="empleadoNombre"></h3>
+          <div class="details">
+            DNI: <strong id="empleadoDNI"></strong>
+          </div>
+        </div>
+
+        <!-- Área de resultados -->
+        <div id="resultados" class="hidden">
+          <div class="controls">
+            <div class="info">
+              Registros pendientes: <strong id="totalRegistros">0</strong>
+            </div>
+            <div>
+              <button class="btn btn-secondary" onclick="seleccionarTodos()">
+                ☑️ Seleccionar todos
+              </button>
+              <button class="btn btn-success" id="btnConfirmar" onclick="confirmarSeleccionados()">
+                ✅ Confirmar seleccionados
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table id="tablaRegistros">
+              <thead>
+                <tr>
+                  <th class="chk-col"></th>
+                  <th>Fecha</th>
+                  <th>Turno</th>
+                  <th>Total Horas</th>
+                  <th>25% Noct</th>
+                  <th>25% Diur</th>
+                  <th>50% Noct</th>
+                  <th>75% Prol</th>
+                  <th>100% Fer</th>
+                  <th>Ingeniero</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaBody">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="totals">
+            <div class="label">Total horas pendientes de confirmar:</div>
+            <div class="value" id="totalHoras">0</div>
+          </div>
+
+          <div class="notice warning" style="margin-top: 15px;">
+            ⚠️ Al confirmar, usted acepta que las horas extras mostradas son correctas. 
+            Esta acción quedará registrada con fecha y hora.
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div id="historial" class="history hidden">
+          <h4>📜 Últimas confirmaciones</h4>
+          <div id="historialLista"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="portal-confirmacion.js"></script>
+  
+</body>
+</html>
